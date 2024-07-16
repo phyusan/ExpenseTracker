@@ -1,3 +1,4 @@
+import 'package:expense_tracker/database/app_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:expense_tracker/controller/base_controller.dart';
@@ -13,9 +14,11 @@ class BottomNavigationBarScreen extends StatefulWidget {
   //RxInt currentIndex = 2.obs;
   const BottomNavigationBarScreen({
     Key? key,
+    required this.db,
     //required this.currentIndex,
   }) : super(key: key);
 
+  final AppDatabase db;
   @override
   State<BottomNavigationBarScreen> createState() =>
       _BottomNavigationBarScreenState();
@@ -31,10 +34,12 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   void initState() {
     // TODO: implement initState
     _list = [
-      MoneyComeAndOutScreen(),
-      BarChartScreen(),
-      const AddExpenseScreen(),
-      ManageSchedule()
+      MoneyComeAndOutScreen(
+        db: widget.db,
+      ),
+      BarChartScreen( db: widget.db,),
+       AddExpenseScreen( db: widget.db,),
+      ManageSchedule( db: widget.db,)
     ];
     super.initState();
   }

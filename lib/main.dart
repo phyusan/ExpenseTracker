@@ -1,21 +1,28 @@
+import 'package:expense_tracker/database/app_database.dart';
+import 'package:expense_tracker/database/dao/expense_dao.dart';
+import 'package:expense_tracker/model/fcm_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:expense_tracker/screen/bottom_navigation.dart';
-import 'package:expense_tracker/screen/history/bar_chart.dart';
-import 'package:expense_tracker/screen/manageSchedule/manage_schedule.dart';
 
-import 'screen/appointment/active_appointment_detail.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var db = await AppDatabase.init();
+  
 
-void main() {
-  runApp(const MyApp());
+  runApp(MyApp(
+    db: db,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.db});
+  final AppDatabase db;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+  
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -38,7 +45,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const BottomNavigationBarScreen(),
+      home: BottomNavigationBarScreen(
+        db: db,
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:expense_tracker/database/app_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:expense_tracker/controller/money_come_out_controller.dart';
@@ -7,9 +8,10 @@ import 'package:expense_tracker/screen/income/expense.dart';
 import 'package:expense_tracker/screen/income/income.dart';
 
 class MoneyComeAndOutScreen extends StatelessWidget {
-  MoneyComeAndOutScreen({super.key});
-  final MoneyComeOutController _moneyComeOutController =
-      Get.put(MoneyComeOutController());
+  MoneyComeAndOutScreen({super.key, required this.db});
+  final AppDatabase db;
+  late final MoneyComeOutController _moneyComeOutController =
+      Get.put(MoneyComeOutController(db: db));
 
   @override
   Widget build(BuildContext context) {

@@ -1,11 +1,14 @@
+import 'package:expense_tracker/database/app_database.dart';
+import 'package:expense_tracker/database/dao/expense_dao.dart';
+import 'package:expense_tracker/model/fcm_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:expense_tracker/generated/assets.dart';
 import 'package:expense_tracker/helper/app_constant.dart';
 
 class AddExpenseScreen extends StatelessWidget {
-  const AddExpenseScreen({super.key});
-
+  const AddExpenseScreen({super.key, required this.db});
+  final AppDatabase db;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,18 +83,33 @@ class AddExpenseScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 20),
                       child: Align(
                           alignment: Alignment.bottomRight,
-                          child: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: MyColor.colorGreen,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Image.asset(
-                              Assets.imagesAddicon,
-                              width: 18,
-                              height: 18,
-                              color: MyColor.colorWhite,
+                          child: InkWell(
+                            onTap: () {
+                              var model = FcmModel(
+                                  id: null,
+                                  name: 'Ma Poe',
+                                  phone: 123456,
+                                  incomeAmount: '2340000',
+                                  outcomeAmount: '34000',
+                                  isRead: 0,
+                                  isNew: true);
+                              db.expenseDao.insertAccount(model);
+                              print(
+                                  "hello;;${db.expenseDao.findAllPersons().toString()}");
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: MyColor.colorGreen,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Image.asset(
+                                Assets.imagesAddicon,
+                                width: 18,
+                                height: 18,
+                                color: MyColor.colorWhite,
+                              ),
                             ),
                           )),
                     )

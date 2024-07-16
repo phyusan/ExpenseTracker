@@ -1,3 +1,4 @@
+import 'package:expense_tracker/database/app_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:expense_tracker/helper/app_constant.dart';
@@ -5,9 +6,9 @@ import 'package:expense_tracker/screen/history/bar_graph.dart';
 import 'package:expense_tracker/screen/history/expense_controller.dart';
 
 class BarChartScreen extends StatelessWidget {
-  BarChartScreen({super.key});
+  BarChartScreen({super.key, required this.db});
   final ExpenseController _expenseController = Get.put(ExpenseController());
-
+  final AppDatabase db;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

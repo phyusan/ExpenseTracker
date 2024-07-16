@@ -1,3 +1,4 @@
+import 'package:expense_tracker/database/app_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,10 +10,10 @@ import 'package:expense_tracker/widgetHelper/custom_bottom_sheet.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ManageSchedule extends StatelessWidget {
-  ManageSchedule({super.key});
+  ManageSchedule({super.key, required this.db});
   final ManageScheduleController _manageScheduleController =
       Get.put(ManageScheduleController());
-
+  final AppDatabase db;
   @override
   Widget build(BuildContext context) {
     return Obx(
