@@ -1,6 +1,4 @@
 import 'package:expense_tracker/database/app_database.dart';
-import 'package:expense_tracker/database/dao/expense_dao.dart';
-import 'package:expense_tracker/model/fcm_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:expense_tracker/screen/bottom_navigation.dart';

@@ -12,9 +12,6 @@ class AppConstant {
   static const String lightTheme = 'Light theme';
   static const String darkTheme = 'Dark theme';
   static const int camera = 0, gallery = 1;
-  static String imageUrl(String url) {
-    return BaseUrl.imageUrl + url;
-  }
 
   static String getFileSizeString({required int bytes, int decimals = 0}) {
     const suffixes = ["b", "kb", "mb", "gb", "tb"];
@@ -34,7 +31,7 @@ class AppConstant {
 class MyColor {
   static String appTheme = AppConstant.lightTheme;
 
-  static const colorPrimary = Color(0xffF43F5E);
+  static const colorPrimary = Color(0xff18A87B);
   static const colorNeutral900 = Color(0xff18181B);
   static const colorNeutral100 = Color(0xffF4F4F5);
   static const colorNeutral200 = Color(0xffE4E4E7);
@@ -55,8 +52,8 @@ class MyColor {
   static const Color colorWhite = Color(0xffffffff);
   static const Color colorBlackSemiTransparent = Color(0xffB2000000);
   static const Color colorTransparent = Color(0x00000000);
-  static const Color colorBlue = Color(0xff0075FF);
-  static const Color colorBlueLightBg = Color(0xffd9f0ff);
+  static const Color colorBlue = Color(0xff18A87B);
+  static const Color colorBlueLightBg = Color(0xffE7F8F1);
   static const Color colorPinkLightBg = Color(0xffFFF3F8);
   static const Color colorGreyLight = Color(0xffF4F5F7);
   static const Color colorDivider = Color(0xffEEEFF4);
@@ -66,7 +63,14 @@ class MyColor {
   static const Color colorGrey = Color(0xff474A57);
   static const Color colorError = Color(0xffd9534f);
   static const Color colorRedTransparent = Color(0xffb2d69d9a);
-  static const Color colorGreen = Color(0xff00C6AE);
+  static const Color colorGreen = Color(0xff128A65);
+
+  //Brand colors
+  static const Color colorPrimaryGreen = Color(0xff18A87B);
+  static const Color colorPrimaryGreenHover = Color(0xff128A65);
+  static const Color colorDarkBase = Color(0xff172F2D);
+  static const Color colorPageBackground = Color(0xffF6F8F7);
+  static const Color colorPrimaryGreenTint = Color(0xffE7F8F1);
 
   static const Color colorProfileGradient1 = Color(0xffFFFCF1);
   static const Color colorProfileGradient2 = Color(0xffF5F9FF);
@@ -109,14 +113,6 @@ String encodeFormData(Map<String, dynamic> data) {
   return data.keys
       .map((key) => "$key=${Uri.encodeComponent(data[key])}")
       .join("&");
-}
-
-class BaseUrl {
-  static const String nurseApi = "https://caremenurseapi.azurewebsites.net/";
-  static const String paymentApi =
-      "https://paymentgateway.yammobots.com/kbzpay/";
-  static const String imageUrl =
-      "https://caremestorage.blob.core.windows.net/caremerss/Careme/";
 }
 
 Map<T, List<S>> groupsBy<S, T>(Iterable<S> values, T Function(S) key) {

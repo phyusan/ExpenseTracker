@@ -1,92 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:expense_tracker/helper/app_constant.dart';
-import 'package:expense_tracker/model/category_model.dart';
-import 'package:expense_tracker/screen/income/income.dart';
+import 'package:expense_tracker/model/expense_model.dart';
 
-class ExpendController extends GetxController {
-  Rx<TextEditingController> incomeTextController = TextEditingController().obs;
-  RxList<CategoryModel> spendingCategoryList = <CategoryModel>[].obs;
-  var isConvert = false.obs;
-  var payIncome = (0.0).obs;
+class ExpenseController extends GetxController {
+  RxList<ExpenseModel> expenseList = <ExpenseModel>[].obs;
+  RxList<double> weeklySummary = <double>[].obs;
+
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
-    spendingCategoryList.addAll([
-      CategoryModel(
+    weeklySummary.addAll([80.40, 180.50, 70.0, 52.9, 90.8, 150.5, 100.8]);
+
+    final now = DateTime.now();
+    expenseList.addAll([
+      ExpenseModel(
           id: 1,
-          name: 'House',
-          description: 'House',
-          containerColor: MyColor.colorGreen,
-          isDisable: false.obs,
-          isSelect: true.obs),
-      CategoryModel(
+          name: 'Bus Fee',
+          category: 'Transport',
+          icon: Icons.directions_bus_filled,
+          color: const Color(0xff3B82F6),
+          amount: 25000,
+          date: now.subtract(const Duration(hours: 2)),
+          isDelete: false,
+          isShow: true),
+      ExpenseModel(
           id: 2,
-          name: 'Transport',
-          description: 'Transport',
-          containerColor: MyColor.colorRedTransparent,
-          isDisable: false.obs,
-          isSelect: true.obs),
-      CategoryModel(
-          id: 3,
           name: 'Breakfast',
-          description: 'Breakfast',
-          containerColor: MyColor.colorTextRed,
-          isDisable: false.obs,
-          isSelect: true.obs),
-      CategoryModel(
+          category: 'Food',
+          icon: Icons.fastfood,
+          color: const Color(0xffF59E0B),
+          amount: 50000,
+          date: now.subtract(const Duration(hours: 4)),
+          isDelete: false,
+          isShow: true),
+      ExpenseModel(
+          id: 3,
+          name: 'Lunch',
+          category: 'Food',
+          icon: Icons.lunch_dining,
+          color: const Color(0xffF59E0B),
+          amount: 80000,
+          date: now.subtract(const Duration(days: 1, hours: 3)),
+          isDelete: false,
+          isShow: true),
+      ExpenseModel(
           id: 4,
-          name: 'lunch',
-          description: 'Lunch',
-          containerColor: MyColor.colorBlue,
-          isDisable: false.obs,
-          isSelect: true.obs),
-      CategoryModel(
-          id: 5,
           name: 'Dinner',
-          description: 'Dinner',
-          containerColor: MyColor.colorGreen,
-          isDisable: false.obs,
-          isSelect: true.obs),
-      CategoryModel(
+          category: 'Food',
+          icon: Icons.dinner_dining,
+          color: const Color(0xffF59E0B),
+          amount: 15000,
+          date: now.subtract(const Duration(days: 1)),
+          isDelete: false,
+          isShow: true),
+      ExpenseModel(
+          id: 5,
+          name: 'Snack',
+          category: 'Food',
+          icon: Icons.icecream,
+          color: const Color(0xffF59E0B),
+          amount: 30000,
+          date: now.subtract(const Duration(days: 2)),
+          isDelete: false,
+          isShow: true),
+      ExpenseModel(
           id: 6,
-          name: 'Health',
-          description: 'Health',
-          containerColor: MyColor.colorGreen,
-          isDisable: false.obs,
-          isSelect: false.obs),
-      CategoryModel(
+          name: 'Shopping',
+          category: 'Shopping',
+          icon: Icons.shopping_bag,
+          color: const Color(0xff8B5CF6),
+          amount: 120000,
+          date: now.subtract(const Duration(days: 2, hours: 5)),
+          isDelete: false,
+          isShow: true),
+      ExpenseModel(
           id: 7,
-          name: 'Other',
-          description: 'Other',
-          containerColor: MyColor.colorGreen,
-          isDisable: false.obs,
-          isSelect: true.obs),
-      CategoryModel(
+          name: 'Electricity Bill',
+          category: 'Utilities',
+          icon: Icons.bolt,
+          color: const Color(0xffF97316),
+          amount: 45000,
+          date: now.subtract(const Duration(days: 3)),
+          isDelete: false,
+          isShow: true),
+      ExpenseModel(
           id: 8,
-          name: 'Clothing',
-          description: 'Clothing',
-          containerColor: MyColor.colorGreen,
-          isDisable: false.obs,
-          isSelect: true.obs),
-      CategoryModel(
-          id: 9,
-          name: 'Cosmetic',
-          description: 'Cosmetic',
-          containerColor: MyColor.colorRedTransparent,
-          isDisable: false.obs,
-          isSelect: false.obs),
+          name: 'Movie',
+          category: 'Entertainment',
+          icon: Icons.movie,
+          color: const Color(0xffEF4444),
+          amount: 25000,
+          date: now.subtract(const Duration(days: 4)),
+          isDelete: false,
+          isShow: true),
     ]);
   }
 
-  void convertMoney() {
-    var x = DateTime.now().daysInMonth;
-    print(x);
-    print('PayIncome:::${incomeTextController.value.text}');
-
-    int income = int.parse(incomeTextController.value.text);
-    payIncome = (income / x).obs;
-    print('PayIncome::${payIncome.toInt()}');
-  }
+  double get totalAmount =>
+      expenseList.fold(0.0, (sum, item) => sum + item.amount);
 }

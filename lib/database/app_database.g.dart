@@ -69,7 +69,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -85,7 +85,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Account` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `phone` INTEGER, `incomeAmount` TEXT, `outcomeAmount` TEXT, `PhotoURL` TEXT, `isRead` INTEGER, `isNew` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `Account` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `phone` INTEGER, `incomeAmount` TEXT, `outcomeAmount` TEXT, `PhotoURL` TEXT, `isRead` INTEGER, `isNew` INTEGER, `category` TEXT, `createdAt` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -115,7 +115,9 @@ class _$ExpenseDao extends ExpenseDao {
                   'outcomeAmount': item.outcomeAmount,
                   'PhotoURL': item.PhotoURL,
                   'isRead': item.isRead,
-                  'isNew': item.isNew == null ? null : (item.isNew! ? 1 : 0)
+                  'isNew': item.isNew == null ? null : (item.isNew! ? 1 : 0),
+                  'category': item.category,
+                  'createdAt': item.createdAt
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -128,7 +130,8 @@ class _$ExpenseDao extends ExpenseDao {
 
   @override
   Future<List<FcmModel>> findAllPersons() async {
-    return _queryAdapter.queryList('SELECT * FROM Account',
+    return _queryAdapter.queryList(
+        'SELECT * FROM Account ORDER BY createdAt DESC',
         mapper: (Map<String, Object?> row) => FcmModel(
             id: row['id'] as int?,
             name: row['name'] as String?,
@@ -137,7 +140,17 @@ class _$ExpenseDao extends ExpenseDao {
             outcomeAmount: row['outcomeAmount'] as String?,
             PhotoURL: row['PhotoURL'] as String?,
             isRead: row['isRead'] as int?,
-            isNew: row['isNew'] == null ? null : (row['isNew'] as int) != 0));
+            isNew: row['isNew'] == null ? null : (row['isNew'] as int) != 0,
+            category: row['category'] as String?,
+            createdAt: row['createdAt'] as int?));
+  }
+
+  @override
+  Future<List<FcmModel>> searchPersons(String keyword) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Account WHERE name LIKE \'%\' || ?1 || \'%\' ORDER BY createdAt DESC',
+        mapper: (Map<String, Object?> row) => FcmModel(id: row['id'] as int?, name: row['name'] as String?, phone: row['phone'] as int?, incomeAmount: row['incomeAmount'] as String?, outcomeAmount: row['outcomeAmount'] as String?, PhotoURL: row['PhotoURL'] as String?, isRead: row['isRead'] as int?, isNew: row['isNew'] == null ? null : (row['isNew'] as int) != 0, category: row['category'] as String?, createdAt: row['createdAt'] as int?),
+        arguments: [keyword]);
   }
 
   @override
@@ -151,13 +164,21 @@ class _$ExpenseDao extends ExpenseDao {
             outcomeAmount: row['outcomeAmount'] as String?,
             PhotoURL: row['PhotoURL'] as String?,
             isRead: row['isRead'] as int?,
-            isNew: row['isNew'] == null ? null : (row['isNew'] as int) != 0),
+            isNew: row['isNew'] == null ? null : (row['isNew'] as int) != 0,
+            category: row['category'] as String?,
+            createdAt: row['createdAt'] as int?),
         arguments: [id]);
   }
 
   @override
   Future<void> clearDB() async {
     await _queryAdapter.queryNoReturn('DELETE FROM Account');
+  }
+
+  @override
+  Future<void> deleteById(int id) async {
+    await _queryAdapter
+        .queryNoReturn('DELETE FROM Account WHERE id = ?1', arguments: [id]);
   }
 
   @override

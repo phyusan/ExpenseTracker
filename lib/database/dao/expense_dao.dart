@@ -6,8 +6,12 @@ import '../../model/fcm_model.dart';
 abstract class ExpenseDao {
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertAccount(FcmModel person);
-  @Query('SELECT * FROM ${TableName.account}')
+  @Query("SELECT * FROM ${TableName.account} ORDER BY createdAt DESC")
   Future<List<FcmModel>> findAllPersons();
+
+  @Query(
+      "SELECT * FROM ${TableName.account} WHERE name LIKE '%' || :keyword || '%' ORDER BY createdAt DESC")
+  Future<List<FcmModel>> searchPersons(String keyword);
 
   @Query("SELECT * FROM ${TableName.account} WHERE id = :id")
   Future<List<FcmModel>?> getNotiById(int id);
@@ -26,6 +30,9 @@ abstract class ExpenseDao {
 
   @Query("DELETE FROM ${TableName.account}")
   Future<void> clearDB();
+
+  @Query("DELETE FROM ${TableName.account} WHERE id = :id")
+  Future<void> deleteById(int id);
 
   // @Query(
   //     "DELETE FROM ${TableName.notiMaster} WHERE invoiceNo = :invoiceNo AND type = :type")

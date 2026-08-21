@@ -12,6 +12,8 @@ class FcmModel {
     this.PhotoURL,
     this.isRead,
     this.isNew,
+    this.category,
+    this.createdAt,
   });
   @PrimaryKey(autoGenerate: true)
   int? id;
@@ -23,6 +25,8 @@ class FcmModel {
   String? PhotoURL;
   int? isRead;
   bool? isNew = false;
+  String? category;
+  int? createdAt;
 
   FcmModel.fromJson(Map<String, dynamic> json) {
     id = json['id'] as int?;
@@ -34,6 +38,8 @@ class FcmModel {
     PhotoURL = json['PhotoURL'] as String?;
     isRead = json['isRead'] as int?;
     isNew = json['isNew'] as bool?;
+    category = json['category'] as String?;
+    createdAt = json['createdAt'] as int?;
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +53,8 @@ class FcmModel {
     data['PhotoURL'] = PhotoURL;
     data['isRead'] = isRead;
     data['isNew'] = isNew;
+    data['category'] = category;
+    data['createdAt'] = createdAt;
     return data;
   }
 }

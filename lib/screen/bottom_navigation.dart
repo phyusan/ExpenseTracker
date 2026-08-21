@@ -6,16 +6,14 @@ import 'package:expense_tracker/helper/app_constant.dart';
 import 'package:expense_tracker/screen/daily_expense/add_expense.dart';
 import 'package:expense_tracker/screen/history/bar_chart.dart';
 import 'package:expense_tracker/screen/income/money_come_out.dart';
-import 'package:expense_tracker/screen/manageSchedule/manage_schedule.dart';
+import 'package:expense_tracker/screen/settings/profile_setting.dart';
 
 import '../generated/assets.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
-  //RxInt currentIndex = 2.obs;
   const BottomNavigationBarScreen({
     Key? key,
     required this.db,
-    //required this.currentIndex,
   }) : super(key: key);
 
   final AppDatabase db;
@@ -28,202 +26,120 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   List<Widget> _list = [];
   final _baseController = Get.put(BaseController());
 
-  var count = 0;
-
   @override
   void initState() {
-    // TODO: implement initState
     _list = [
-      MoneyComeAndOutScreen(
-        db: widget.db,
-      ),
-      BarChartScreen( db: widget.db,),
-       AddExpenseScreen( db: widget.db,),
-      ManageSchedule( db: widget.db,)
+      MoneyComeAndOutScreen(db: widget.db),
+      BarChartScreen(db: widget.db),
+      AddExpenseScreen(db: widget.db),
+      ProfileSettingScreen(db: widget.db),
     ];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        if (_baseController.currentIndex.value != 0) {
-          setState(() {
-            _baseController.currentIndex.value = 0;
-          });
-          return Future.value(false);
-        } else {
-          return Future.value(true);
+    return PopScope(
+      canPop: _baseController.currentIndex.value == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _baseController.currentIndex.value = 0;
         }
       },
       child: Obx(
         () => Scaffold(
-          backgroundColor: MyColor.colorWhite,
-          body: Obx(
-            () => IndexedStack(
-              index: _baseController.currentIndex.value,
-              children: _list,
+          backgroundColor: MyColor.colorPageBackground,
+          body: IndexedStack(
+            index: _baseController.currentIndex.value,
+            children: _list,
+          ),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 20,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(0, 'Home', Assets.imagesHomefilledicon, Assets.imagesHomeicon),
+                    _buildNavItem(1, 'History', null, null, icon: Icons.history_rounded),
+                    _buildNavItem(2, 'Transaction', Assets.imagesAddicon, Assets.imagesAddicon),
+                    _buildNavItem(3, 'Setting', Assets.imagesSetting, Assets.imagesSetting),
+                  ],
+                ),
+              ),
             ),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-              selectedItemColor: MyColor.colorPrimary,
-              unselectedItemColor: MyColor.colorTextHint,
-              showUnselectedLabels: true,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _baseController.currentIndex.value,
-              onTap: (i) async {
-                setState(() {
-                  _baseController.currentIndex.value = i;
-                });
-
-                if (_baseController.currentIndex.value == 1) {
-                  if (count < 2) {
-                    count++;
-                  }
-                } else {
-                  count = 0;
-                }
-              },
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, top: 10),
-                    child: Image.asset(
-                      Assets.imagesHomefilledicon,
-                      color: _baseController.currentIndex.value == 0
-                          ? MyColor.colorPrimary
-                          : MyColor.colorTextHint,
-                      width: 24,
-                      height: 24,
-                    ),
-                  ),
-                  icon: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, top: 10),
-                    child: Image.asset(
-                      Assets.imagesHomeicon,
-                      color: _baseController.currentIndex.value == 0
-                          ? MyColor.colorTextBlack
-                          : MyColor.colorTextHint,
-                      width: 24,
-                      height: 24,
-                    ),
-                  ),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, top: 10),
-                    child: Icon(
-                      Icons.bar_chart,
-                      color: _baseController.currentIndex.value == 1
-                          ? MyColor.colorPrimary
-                          : MyColor.colorTextHint,
-                      size: 24,
-                    ),
-                  ),
-                  icon: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, top: 10),
-                    child: Icon(
-                      Icons.bar_chart,
-                      color: _baseController.currentIndex.value == 1
-                          ? MyColor.colorTextBlack
-                          : MyColor.colorTextHint,
-                      size: 24,
-                    ),
-                  ),
-                  label: 'History',
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, top: 10),
-                    child: Image.asset(
-                      Assets.imagesAddicon,
-                      color: _baseController.currentIndex.value == 2
-                          ? MyColor.colorPrimary
-                          : MyColor.colorTextHint,
-                      width: 24,
-                      height: 24,
-                    ),
-                  ),
-                  icon: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10, top: 10),
-                        child: Image.asset(
-                          Assets.imagesAddicon,
-                          color: _baseController.currentIndex.value == 2
-                              ? MyColor.colorTextBlack
-                              : MyColor.colorTextHint,
-                          width: 24,
-                          height: 24,
-                        ),
-                      ),
-                      if (_baseController.isNotification.isTrue) ...[
-                        Positioned(
-                          top: 10,
-                          left: 15,
-                          child: Image.asset(
-                            Assets.imagesNotidot,
-                            width: 10,
-                            height: 10,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  label: 'Transcation',
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, top: 10),
-                    child: Image.asset(
-                      Assets.imagesSetting,
-                      color: _baseController.currentIndex.value == 3
-                          ? MyColor.colorPrimary
-                          : MyColor.colorTextHint,
-                      width: 24,
-                      height: 24,
-                    ),
-                  ),
-                  icon: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10, top: 10),
-                        child: Image.asset(
-                          Assets.imagesSetting,
-                          color: _baseController.currentIndex.value == 3
-                              ? MyColor.colorTextBlack
-                              : MyColor.colorTextHint,
-                          width: 24,
-                          height: 24,
-                        ),
-                      ),
-                      if (_baseController.isNotification.isTrue) ...[
-                        Positioned(
-                          top: 10,
-                          left: 15,
-                          child: Image.asset(
-                            Assets.imagesNotidot,
-                            width: 10,
-                            height: 10,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  label: 'Setting',
-                ),
-              ]),
         ),
       ),
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  Widget _buildNavItem(int index, String label, String? activeAsset,
+      String? inactiveAsset, {IconData? icon}) {
+    final isSelected = _baseController.currentIndex.value == index;
+    return GestureDetector(
+      onTap: () {
+        _baseController.currentIndex.value = index;
+      },
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected ? MyColor.colorPrimaryGreenTint : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedScale(
+              scale: isSelected ? 1.15 : 1.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              child: icon != null
+                  ? Icon(
+                      icon,
+                      size: 22,
+                      color: isSelected
+                          ? MyColor.colorPrimary
+                          : MyColor.colorTextHint,
+                    )
+                  : Image.asset(
+                      isSelected ? activeAsset! : inactiveAsset!,
+                      width: 22,
+                      height: 22,
+                      color: isSelected
+                          ? MyColor.colorPrimary
+                          : MyColor.colorTextHint,
+                    ),
+            ),
+            const SizedBox(height: 2),
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 300),
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                color: isSelected
+                    ? MyColor.colorPrimary
+                    : MyColor.colorTextHint,
+              ),
+              child: Text(label, overflow: TextOverflow.ellipsis),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,9 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:expense_tracker/helper/app_constant.dart';
-import 'package:expense_tracker/model/category_model.dart';
 import 'package:expense_tracker/screen/income/income.dart';
 
 class IncomeController extends GetxController {
